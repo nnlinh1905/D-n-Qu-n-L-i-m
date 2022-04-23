@@ -12,7 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       allcodes.hasMany(models.HocSinhs, { foreignKey: 'NamHoc', as: 'NamHocData' })
       allcodes.hasMany(models.HocSinhs, { foreignKey: 'MaLop', as: 'MaLopData' })
-      allcodes.hasMany(models.HocSinhs, {foreignKey: 'MaTonGiao', as: 'MaTonGiao'})
+      allcodes.hasMany(models.HocSinhs, { foreignKey: 'MaTonGiao', as: 'MaTonGiao' })
+      
+      allcodes.hasMany(models.GiaoViens, { foreignKey: 'MaChuyenMon', as: 'MaChuyenMonData' })
+      allcodes.hasMany(models.GiaoViens, { foreignKey: 'MaChucDanh', as: 'MaChucDanhData' })
+      
+      allcodes.hasMany(models.LopHocs, { foreignKey: 'NamHoc', as: 'NamHocNe' })
+      allcodes.hasMany(models.LopHocs, { foreignKey: 'MaKhoi', as: 'MaKhoiData' })
     }
   };
     allcodes.init({

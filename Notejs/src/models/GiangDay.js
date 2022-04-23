@@ -11,12 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // GiangDays.belongsTo(models.GiaoViens, { foreignKey: 'MaGV', target: 'HoTenGV', as: 'MaGVData' });
+      // GiangDays.belongsTo(models.LopHocs, { foreignKey: 'MaLop', target: 'TenLop', as: 'LopData' });
     }
   };
     GiangDays.init({
-        NamHoc: DataTypes.DATE,
-        MaLop: DataTypes.INTEGER,
-        MaGV: DataTypes.INTEGER
+        NamHoc: DataTypes.STRING,
+        MaLop: DataTypes.STRING,
+        MaGV: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'GiangDays',

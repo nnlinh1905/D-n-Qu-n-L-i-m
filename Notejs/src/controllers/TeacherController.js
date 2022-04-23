@@ -20,10 +20,9 @@ let handleLogin = async (req, res) => {
     })
 }
 
-let handleGetAllUsers = async (req, res) => {
+let handleGetAllTeachers = async (req, res) => {
     let id = req.query.id;
-    let users = await userService.getAllUsers(id);
-
+    let users = await teacherService.getAllTeachers(id);
     return res.status(200).json({
         errCode: 0,
         errMessage: "OK",
@@ -32,25 +31,25 @@ let handleGetAllUsers = async (req, res) => {
 }
 
 
-let handleCreateNewUser = async (req, res) => {
-    let message = await userService.CreateNewUser(req.body)
+let handleCreateNewTeacher = async (req, res) => {
+    let message = await teacherService.CreateNewTeacher(req.body)
     return res.status(200).json(message)
 }
 
-let handleEditUser = async (req, res) => {
+let handleEditTeacher = async (req, res) => {
     let data = req.body;
-    let message = await userService.updateUserData(data);
+    let message = await teacherService.handleEditTeacher(data);
     return res.status(200).json(message)
 }
 
-let handleDeleteUser = async (req, res) => {
+let handleDeleteTeacher = async (req, res) => {
     if (!req.body.ID) {
         return res.status(200).json({
             errCode: 1,
             errMessage: "Missing required parameters"
         })
     }
-    let message = await userService.DeleteUser(req.body.ID)
+    let message = await teacherService.DeleteTeacher(req.body.ID)
     return res.status(200).json(message)
 }
 
@@ -68,11 +67,54 @@ let getAllCode = async (req, res) => {
     }
 }
 
+let handleInforTeacher = async (req, res) => {
+    try {
+        let response = await teacherService.saveInforTeacher(req.body);
+        console.log(req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        console.log('put infor code error', e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage:'Error from server'
+        })
+    }
+}
+
+let handleGetDetailTeacher = async (req, res) => {
+    try {
+        let info = await teacherService.getDetailTeacher(req.query.ID);
+        return res.status(200).json(info)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage:'Error from server'
+        })
+    }
+}
+
+let handleGetTeacherBySubject = async (req, res) => {
+    try {
+        let bySubject = await teacherService.TeacherBySubject(req.query.TBS)
+        return res.status(200).json(bySubject)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage:'Error from server'
+        })
+    }
+}
+
 module.exports = {
     handleLogin: handleLogin,
-    handleGetAllUsers: handleGetAllUsers,
-    handleCreateNewUser: handleCreateNewUser,
-    handleEditUser: handleEditUser,
-    handleDeleteUser: handleDeleteUser,
-    getAllCode:getAllCode,
+    handleGetAllTeachers: handleGetAllTeachers,
+    handleCreateNewTeacher: handleCreateNewTeacher,
+    handleEditTeacher: handleEditTeacher,
+    handleDeleteTeacher: handleDeleteTeacher,
+    getAllCode: getAllCode,
+    handleInforTeacher: handleInforTeacher,
+    handleGetDetailTeacher: handleGetDetailTeacher,
+    handleGetTeacherBySubject:handleGetTeacherBySubject
 }

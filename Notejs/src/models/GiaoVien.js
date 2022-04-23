@@ -11,21 +11,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      GiaoViens.hasOne(models.markdowns, { foreignKey: 'teacherID' })
+      
+      GiaoViens.belongsTo(models.allcodes, { foreignKey: 'MaChuyenMon', targetKey: 'keyMap', as: 'MaChuyenMonData' })
+      GiaoViens.belongsTo(models.allcodes, { foreignKey: 'MaChucDanh', targetKey: 'keyMap', as: 'MaChucDanhData'})
+      
+      // GiaoViens.hasMany(models.GiangDays, { foreignKey: 'MaGV', as: 'MaGVData'})
     }
   };
   GiaoViens.init({
     HoTenGV: DataTypes.STRING,
-    MaXaPhuong: DataTypes.INTEGER,
-    MaChuyenMon: DataTypes.INTEGER,
-    MaChucDanh: DataTypes.INTEGER,
-    MaTonGiao: DataTypes.INTEGER,
+    MaXaPhuong: DataTypes.STRING,
+    MaChuyenMon: DataTypes.STRING,
+    MaChucDanh: DataTypes.STRING,
+    MaTonGiao: DataTypes.STRING,
     GioiTinh: DataTypes.STRING,
     NgaySinh: DataTypes.DATE,
     DiaChi: DataTypes.STRING,
     Email: DataTypes.STRING,
     SDT: DataTypes.STRING,
     Password: DataTypes.STRING,
-    avatar: DataTypes.STRING,
+    avatar: DataTypes.BLOB('long'),
   }, {
     sequelize,
     modelName: 'GiaoViens',

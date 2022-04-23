@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('GiangDays', {
+    await queryInterface.createTable('LopHocs', {
       ID: {
         allowNull: false,
         autoIncrement: true,
@@ -10,18 +10,14 @@ module.exports = {
       },
       NamHoc: {
         allowNull: false,
-        primaryKey: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
+        
       },
-      MaLop: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.STRING,
+      MaKhoi: {
+        type: Sequelize.STRING
       },
-      MaGV: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.STRING,
+      TenLop: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +31,6 @@ module.exports = {
   },
   
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('GiangDays');
+    await queryInterface.dropTable('LopHocs');
   }
 };

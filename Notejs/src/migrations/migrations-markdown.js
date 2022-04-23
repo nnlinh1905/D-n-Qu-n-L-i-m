@@ -19,11 +19,15 @@ module.exports = {
       description: {
         allowNull: true,
         type: Sequelize.TEXT('long')
-        },
+      },
       SubjectID: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER 
-        },
+      },
+      teacherID: {
+        allowNull: true,
+        type: Sequelize.INTEGER 
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

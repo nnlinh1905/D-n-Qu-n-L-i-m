@@ -70,20 +70,20 @@ let checkUserEmail = (email) => {
     })
 }
 
-let getAllUsers = (userID) => {
+let getAllTeachers = (userID) => {
     return new Promise( async (resolve, reject) => {
         try {
             let users = '';
             if (userID === 'ALL') {
-                users = await db.HocSinhs.findAll({
+                users = await db.GiaoViens.findAll({
                     attributes: {
                         exclude: ['Password']
                      }
                 })
             }
             if (userID && userID !== 'ALL') {
-                users = await db.HocSinhs.findOne({
-                    where: {id: userID},
+                users = await db.GiaoViens.findOne({
+                    where: {ID: userID},
                 })
             }
             resolve(users)
@@ -93,7 +93,7 @@ let getAllUsers = (userID) => {
     })
 }
 
-let CreateNewUser = (data) => {
+let CreateNewTeacher = (data) => {
     return new Promise( async(resolve, reject)=>{
         try {
             let check = await checkUserEmail(data.Email)
@@ -105,19 +105,15 @@ let CreateNewUser = (data) => {
                 });
             } else {
                 let hashPasswordFromBcrypt = await hashUserPassword(data.Password);
-                await db.HocSinhs.create({
-                    HoTenHS: data.HoTenHS,
-                    NamHoc: data.NamHoc,
-                    MaLop: data.MaLop,
+                await db.GiaoViens.create({
+                    HoTenGV: data.HoTenGV,
+                    MaChuyenMon: data.MaChuyenMon,
+                    MaChucDanh: data.MaChucDanh,
                     MaTonGiao: data.MaTonGiao,
                     GioiTinh: data.GioiTinh,
                     NgaySinh: data.NgaySinh,
                     DiaChi: data.DiaChi,
                     SDT: data.SDT,
-                    HoTenCha: data.HoTenCha,
-                    NamSinhCha: data.NamSinhCha,
-                    HoTenMe: data.HoTenMe,
-                    NamSinhMe: data.NamSinhMe,
                     Email: data.Email,
                     Password: hashPasswordFromBcrypt,
                     avatar: data.avatar
@@ -134,9 +130,9 @@ let CreateNewUser = (data) => {
     })
 }
 
-let DeleteUser = (idUser) => {
+let DeleteTeacher = (idUser) => {
     return new Promise(async (resolve, reject) => {
-        let user = await db.HocSinhs.findOne({
+        let user = await db.GiaoViens.findOne({
             where: {ID: idUser}
         })
         if (!user) {
@@ -145,7 +141,7 @@ let DeleteUser = (idUser) => {
                 errMessage: `The user is't exit`
             })
         }
-        await db.HocSinhs.destroy({
+        await db.GiaoViens.destroy({
             where: {ID: idUser}
         })
         resolve({
@@ -155,37 +151,33 @@ let DeleteUser = (idUser) => {
     })
 }
 
-let updateUserData = (userData) => {
+let handleEditTeacher = (userData) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log('userData',userData)
             if (!userData.ID) {
                 resolve({
                     errCode: 2,
                     errMessage: `Missing required parameters`
                 });
             }
-            let user = await db.HocSinhs.findOne({
+            let user = await db.GiaoViens.findOne({
                 where: { ID: userData.ID },
                 raw: false
             })
             if (user) {
                 user.Email = userData.Email,
-                    user.HoTenHS = userData.HoTenHS,
-                    user.NamHoc = userData.NamHoc,
-                    user.MaLop = userData.MaLop,
+                    user.HoTenGV = userData.HoTenGV,
+                    user.MaChuyenMon = userData.MaChuyenMon,
+                    user.MaChucDanh = userData.MaChucDanh,
                     user.MaTonGiao = userData.MaTonGiao,
                     user.GioiTinh = userData.GioiTinh,
                     user.NgaySinh = userData.NgaySinh,
                     user.DiaChi = userData.DiaChi,
-                    user.SDT = userData.SDT,
-                    user.HoTenCha = userData.HoTenCha,
-                    user.NamSinhCha = userData.NamSinhCha,
-                    user.HoTenMe = userData.HoTenMe;
-                    user.NamSinhMe = userData.NamSinhMe;
+                    user.SDT = userData.SDT;
                 if (userData.avatar) {
                     user.avatar = userData.avatar;
                 }
-                
                 user.Password = userData.Password
                 await user.save()
                 resolve({
@@ -227,12 +219,106 @@ let GetAllCodeService = (typeInput) => {
     })
 }
 
+let saveInforTeacher = (data) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            if (!data.teacherID || !data.contentHTML || !data.contentMarkdown) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing parameter"
+                })
+            } else {
+                await db.markdowns.create({
+                    contentHTML: data.contentHTML,
+                    contentMarkdown: data.contentMarkdown,
+                    description: data.description,
+                    teacherID: data.teacherID,
+                })
+                resolve({
+                    errCode: 0,
+                    errMessage: "save infor doctor succeed"
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getDetailTeacher = (ID) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!ID) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required parameters"
+                })
+            } else {
+                let data = await db.GiaoViens.findOne({
+                    where: { ID: ID },
+                    attributes: {
+                        exclude: ['Password']
+                    },
+                    include: [
+                        {
+                            model: db.markdowns,
+                            attributes:['contentHTML','contentMarkdown','description','teacherID']
+                        },
+                        {
+                            model: db.allcodes, as: 'MaChucDanhData', attributes:['valueVi', 'valueEn']
+                        },
+                        {
+                            model: db.allcodes, as: 'MaChuyenMonData', attributes:['valueVi', 'valueEn']
+                        },
+
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                resolve({
+                    errCode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e);                              
+        }
+    })
+}
+
+let TeacherBySubject = (TBS) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!TBS) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required parameters"
+                })
+            } else {
+                let res = await db.GiaoViens.findAll({
+                    where: {MaChuyenMon: TBS}
+                })
+                resolve({
+                    errCode: 0,
+                    errMessage: "ok",
+                    res
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     checkUserEmail: checkUserEmail,
     handleUserLogin: handleUserLogin,
-    getAllUsers: getAllUsers,
-    CreateNewUser: CreateNewUser,
-    DeleteUser: DeleteUser,
-    updateUserData: updateUserData,
-    GetAllCodeService:GetAllCodeService,
+    getAllTeachers: getAllTeachers,
+    CreateNewTeacher: CreateNewTeacher,
+    DeleteTeacher: DeleteTeacher,
+    handleEditTeacher: handleEditTeacher,
+    GetAllCodeService: GetAllCodeService,
+    saveInforTeacher: saveInforTeacher,
+    getDetailTeacher: getDetailTeacher,
+    TeacherBySubject: TeacherBySubject,
 }

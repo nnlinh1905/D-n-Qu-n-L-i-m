@@ -12,16 +12,16 @@ module.exports = {
         type: Sequelize.STRING
       },
       MaXaPhuong: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
         },
       MaChuyenMon: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       MaChucDanh: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },      
       MaTonGiao: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       GioiTinh: {
         type: Sequelize.STRING,
@@ -42,7 +42,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       avatar: {
-        type: Sequelize.STRING,
+        type: Sequelize.BLOB('long'),
       },
       createdAt: {
         allowNull: false,

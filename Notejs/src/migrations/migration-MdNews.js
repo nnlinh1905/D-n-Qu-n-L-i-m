@@ -1,23 +1,31 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Lops', {
+    await queryInterface.createTable('MdNews', {
       ID: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      NamHoc: {
+      title: {
         allowNull: false,
-        primaryKey: true,
-        type: Sequelize.DATE
-      },
-      MaKhoi: {
-        type: Sequelize.INTEGER
-      },
-      TenLop: {
         type: Sequelize.STRING
+      },
+      avatar: {
+        type: Sequelize.BLOB('long'),
+      },
+      contentHTML: {
+        allowNull: false,
+        type: Sequelize.TEXT('long')
+        },
+      contentMarkdown: {
+        allowNull: false,
+        type: Sequelize.TEXT('long')
+        },
+      description: {
+        allowNull: true,
+        type: Sequelize.TEXT('long')
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +39,6 @@ module.exports = {
   },
   
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Lops');
+    await queryInterface.dropTable('MdNews');
   }
 };
